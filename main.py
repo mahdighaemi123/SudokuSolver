@@ -216,7 +216,7 @@ def row_index_to_column_index(x, y):
     return y, x
 
 
-def sudoku_solve(items):
+def sudoku_solver(items):
     # print("Working ...")
 
     rows = split_list(items, 9)
@@ -242,7 +242,7 @@ def sudoku_solve(items):
                     new_items = items.copy()
                     new_items[index] = j
 
-                    result = sudoku_solve(new_items)
+                    result = sudoku_solver(new_items)
 
                     if result:
                         return result
@@ -254,7 +254,7 @@ def sudoku_solve(items):
             return items
 
 
-print("Sudoku Solvent -> v1.0.0 ")
+print("Sudoku Solver -> v1.0.0 ")
 print()
 
 print("Rows     -> ", get_rows(main_sudoku))
@@ -272,7 +272,7 @@ print()
 
 start_time = time.time()
 
-print_sudoku(sudoku_solve(get_all_items(get_rows(main_sudoku))))
+print_sudoku(sudoku_solver(get_all_items(get_rows(main_sudoku))))
 
 end_time = time.time()
 solve_time = end_time - start_time

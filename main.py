@@ -1,5 +1,19 @@
 import time
 
+# main_sudoku = [
+#     [[7, 0, 3], [6, 8, 0], [0, 5, 0]],
+#     [[0, 0, 8], [0, 0, 0], [0, 0, 0]],
+#     [[9, 0, 0], [0, 0, 4], [0, 6, 0]],
+#
+#     [[3, 0, 0], [9, 0, 0], [0, 0, 0]],
+#     [[1, 0, 0], [0, 5, 0], [0, 0, 8]],
+#     [[0, 0, 7], [0, 0, 8], [0, 0, 9]],
+#
+#     [[0, 7, 0], [2, 0, 0], [0, 0, 5]],
+#     [[0, 0, 0], [0, 0, 0], [7, 0, 0]],
+#     [[0, 2, 0], [0, 1, 9], [3, 0, 6]]
+# ]
+
 main_sudoku = [
     [[7, 0, 3], [6, 8, 0], [0, 5, 0]],
     [[0, 0, 8], [0, 0, 0], [0, 0, 0]],
@@ -13,20 +27,6 @@ main_sudoku = [
     [[0, 0, 0], [0, 0, 0], [7, 0, 0]],
     [[0, 2, 0], [0, 1, 9], [3, 0, 6]]
 ]
-
-# main_sudoku = [
-#     [[8, 0, 0], [0, 0, 0], [0, 0, 0]],
-#     [[0, 0, 3], [6, 0, 0], [0, 0, 0]],
-#     [[0, 7, 0], [0, 9, 0], [2, 0, 0]],
-#
-#     [[0, 5, 0], [0, 0, 7], [0, 0, 0]],
-#     [[0, 0, 0], [0, 4, 5], [7, 0, 0]],
-#     [[0, 0, 0], [1, 0, 0], [0, 3, 0]],
-#
-#     [[0, 0, 1], [0, 0, 0], [0, 6, 8]],
-#     [[0, 0, 8], [5, 0, 0], [0, 1, 0]],
-#     [[0, 9, 0], [0, 0, 0], [4, 0, 0]]
-# ]
 
 
 def split_list(array, split_count):
@@ -247,14 +247,57 @@ def sudoku_solver(items):
                     if result:
                         return result
 
-                return False
+                return
 
     else:
         if is_solvent_sudoku(items, rows, columns):
+            # print_sudoku(items)
             return items
 
 
-print("Sudoku Solver -> v1.0.0 ")
+def sudoku_solver_all(i):
+    # print("Working ...")
+
+    all_solutions = []
+
+    def solver(items):
+        rows = split_list(items, 9)
+        columns = get_columns(rows)
+        squares = get_squares(rows)
+
+        if not is_correct_columns(columns):
+            return False
+
+        if not is_correct_rows(rows):
+            return False
+
+        if not is_correct_squares(squares):
+            return False
+
+        if can_solvent_sudoku(items):
+
+            for index, item in enumerate(items):
+
+                if item == 0:
+
+                    for j in range(1, 10):
+                        new_items = items.copy()
+                        new_items[index] = j
+                        solver(new_items)
+                    return
+
+        else:
+            if is_solvent_sudoku(items, rows, columns):
+                all_solutions.append(items)
+                print("Find Solve Number -> ", len(all_solutions))
+                print_sudoku(items)
+                return
+
+    solver(i)
+    return all_solutions
+
+
+print("Sudoku Solver -> v2.0.0 ")
 print()
 
 print("Rows     -> ", get_rows(main_sudoku))
@@ -279,4 +322,18 @@ solve_time = end_time - start_time
 
 print("Solve ;)")
 print('Time Spent ->', time.strftime("%H:%M:%S", time.gmtime(solve_time)))
+print()
 
+#########################################################################################
+
+start_time = time.time()
+
+solutions = sudoku_solver_all(get_all_items(get_rows(main_sudoku)))
+
+end_time = time.time()
+solve_time = end_time - start_time
+
+print("Solve All *_*")
+print("Number of solutions-> ", len(solutions))
+print('Time Spent ->', time.strftime("%H:%M:%S", time.gmtime(solve_time)))
+print()
